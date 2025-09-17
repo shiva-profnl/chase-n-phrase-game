@@ -1,0 +1,193 @@
+{
+  "cards": [
+    {
+      "id": "card-01",
+      "image": "/phraser-game-instructions/phraser.gif",
+      "instructions": [
+        "Hi! It's your brain again. I'm a phraser now."
+      ]
+    },
+    {
+      "id": "card-02",
+      "image": "/phraser-game-instructions/instructions-phraser.png",
+      "instructions": [
+        "You might already know what these are if you have played the chaser game."
+      ]
+    },
+    {
+      "id": "card-03",
+      "image": "/phraser-game-instructions/ph-ins-1.jpg",
+      "instructions": [
+        "Click \"show letters\" to start the phraser game."
+      ]
+    },
+    {
+      "id": "card-04",
+      "image": "/phraser-game-instructions/ph-ins-1.jpg",
+      "instructions": [
+        "Once you click \"show letters\", you should NOT go out of the game. That is, this screen should not be closed."
+      ]
+    },
+    {
+      "id": "card-05",
+      "image": "/phraser-game-instructions/ph-ins-1.jpg",
+      "instructions": [
+        "If you go out, then it is considered that the game is over. This is done to prevent cheating. You'll understand why in the next instructions."
+      ]
+    },
+    {
+      "id": "card-06",
+      "image": "/phraser-game-instructions/ph-ins-2.jpg",
+      "instructions": [
+        "You are currently here. (Duh!)"
+      ]
+    },
+    {
+      "id": "card-07",
+      "image": "/phraser-game-instructions/ph-ins-3.jpg",
+      "instructions": [
+        "After you click \"show letters\", you see the letters collected by a chaser."
+      ]
+    },
+    {
+      "id": "card-08",
+      "image": "/phraser-game-instructions/ph-ins-3.jpg",
+      "instructions": [
+        "You have 10 seconds to study the letters and think about possible words that can be formed."
+      ]
+    },
+    {
+      "id": "card-09",
+      "image": "/phraser-game-instructions/ph-ins-4.jpg",
+      "instructions": [
+        "The phraser game starts as soon as it's 10 seconds or if you press the \"start game\" button."
+      ]
+    },
+    {
+      "id": "card-10",
+      "image": "/phraser-game-instructions/ph-ins-5.jpg",
+      "instructions": [
+        "At the top left of the screen, you will see your total score and time left to form words from those letters."
+      ]
+    },
+    {
+      "id": "card-11",
+      "image": "/phraser-game-instructions/ph-ins-5.jpg",
+      "instructions": [
+        "If the phraser game has 'n' letters, then the total time of the phraser game is 3 times 'n' seconds."
+      ]
+    },
+    {
+      "id": "card-12",
+      "image": "/phraser-game-instructions/ph-ins-6.jpg",
+      "instructions": [
+        "You can manually end the game by clicking the 'end game' button in the top right corner."
+      ]
+    },
+    {
+      "id": "card-13",
+      "image": "/phraser-game-instructions/ph-ins-7.jpg",
+      "instructions": [
+        "Here, you can see all the valid words you formed."
+      ]
+    },
+    {
+      "id": "card-14",
+      "image": "/phraser-game-instructions/ph-ins-7.jpg",
+      "instructions": [
+        "Valid word - meaningful English words, common abbreviations or words specific to your subreddit, which were added by moderator to the dictionary."
+      ]
+    },
+    {
+      "id": "card-15",
+      "image": "/phraser-game-instructions/ph-ins-7.jpg",
+      "instructions": [
+        "Invalid word - bad words, curse words, slurs. Not a valid word - random set of letters trying to fit in XD"
+      ]
+    },
+    {
+      "id": "card-16",
+      "image": "/phraser-game-instructions/ph-ins-7.jpg",
+      "instructions": [
+        "If you submit a valid word, your letters are converted to points, you get 1 point for each letter in the valid word you formed."
+      ]
+    },
+    {
+      "id": "card-17",
+      "image": "/phraser-game-instructions/ph-ins-7.jpg",
+      "instructions": [
+        "If you type an invalid word or if the word you formed is not a valid word, letters will return back to the typing area."
+      ]
+    },
+    {
+      "id": "card-18",
+      "image": "/phraser-game-instructions/ph-ins-8.jpg",
+      "instructions": [
+        "Under \"current word:\" you can see the word you are typing."
+      ]
+    },
+    {
+      "id": "card-19",
+      "image": "/phraser-game-instructions/ph-ins-8.jpg",
+      "instructions": [
+        "To submit the word you typed, click \"submit\"."
+      ]
+    },
+    {
+      "id": "card-20",
+      "image": "/phraser-game-instructions/ph-ins-9.jpg",
+      "instructions": [
+        "To clear all the letters you typed, click \"clear\" (yes. No backspace, to make the game challenging *evil smile*)."
+      ]
+    },
+    {
+      "id": "card-21",
+      "image": "/phraser-game-instructions/ph-ins-10.jpg",
+      "instructions": [
+        "Each letter in the \"available letters:\" section can be used exactly once to form a word."
+      ]
+    },
+    {
+      "id": "card-22",
+      "image": "/phraser-game-instructions/ph-ins-11.jpg",
+      "instructions": [
+        "You can see if a word is valid, not valid or invalid here."
+      ]
+    },
+    {
+      "id": "card-23",
+      "image": "/phraser-game-instructions/ph-ins-12.jpg",
+      "instructions": [
+        "The \"submit\" button is enabled only if at least 2 letters are below \"current word\"."
+      ]
+    },
+    {
+      "id": "card-24",
+      "image": "/phraser-game-instructions/ph-ins-13.jpg",
+      "instructions": [
+        "The \"clear\" button is enabled only if at least 1 letter is below \"current word\"."
+      ]
+    },
+    {
+      "id": "card-25",
+      "image": "/phraser-game-instructions/ph-ins-14.jpg",
+      "instructions": [
+        "Once the game is over, you will see this screen with all those details."
+      ]
+    },
+    {
+      "id": "card-26",
+      "image": "/phraser-game-instructions/ph-ins-14.jpg",
+      "instructions": [
+        "When you try to play again by interacting with this post, you will see this page only."
+      ]
+    },
+    {
+      "id": "card-27",
+      "image": "/phraser-game-instructions/phraser.gif",
+      "instructions": [
+        "That's all. Now you know all the instructions! Now go phrase! I think you remember how to start the game! Hehe :)"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "$schema": "https://developers.reddit.com/schema/config-file.v1.json",
+  "name": "chase-n-phrase",
+  "post": {
+    "dir": "dist/client",
+    "entrypoints": {
+      "default": {
+        "entry": "index.html"
+      }
+    }
+  },
+  "server": {
+    "dir": "dist/server",
+    "entry": "index.cjs"
+  },
+  "media": {
+    "dir": "dist/client/splash-screens"
+  },
+  "menu": {
+    "items": [
+      {
+        "label": "Chaser Game",
+        "description": "chase-n-phrase",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/post-create"
+      },
+      {
+        "label": "[Chase-n-Phrase] Add words to custom dictionary",
+        "description": "Add words to the custom dictionary (bad words will be filtered out)",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/show-add-words-form"
+      },
+      {
+        "label": "[Chase-n-Phrase] Remove words from custom dictionary",
+        "description": "Remove words from the custom dictionary",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/show-remove-words-form"
+      },
+      {
+        "label": "[Chase-n-Phrase] Clear custom dictionary",
+        "description": "Clear all words from the custom dictionary",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/clear-custom-dictionary"
+      },
+      {
+        "label": "[Chase-n-Phrase] List custom dictionary",
+        "description": "View all words in the custom dictionary",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/show-list-dictionary-form"
+      },
+      {
+        "label": "[Chase-n-Phrase] Clear leaderboard",
+        "description": "Clear leaderboard data (chaser, phraser, sharer, or all)",
+        "location": "subreddit",
+        "forUserType": "moderator",
+        "endpoint": "/internal/menu/clear-leaderboard"
+      }
+    ]
+  },
+  "forms": {
+    "addWordsToCustomTrieForm": "/internal/forms/add-words-to-trie",
+    "removeWordsFromCustomTrieForm": "/internal/forms/remove-words-from-trie",
+    "listCustomDictionaryForm": "/internal/forms/list-custom-dictionary",
+    "clearLeaderboardForm": "/internal/forms/clear-leaderboard"
+  },
+  "triggers": {
+    "onAppInstall": "/internal/on-app-install"
+  },
+  "dev": {
+    "subreddit": "chase_n_phrase_dev"
+  }
+}

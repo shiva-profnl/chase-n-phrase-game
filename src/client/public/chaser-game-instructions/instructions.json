@@ -1,0 +1,214 @@
+{
+  "cards": [
+    {
+      "id": "card-01",
+      "image": "/chaser-game-instructions/chaser.gif",
+      "instructions": [
+        "Hi! I'm your brain. I'm not a playable character. I AM your brain."
+      ]
+    },
+    {
+      "id": "card-02",
+      "image": "/chaser-game-instructions/chaser.gif",
+      "instructions": [
+        "I am a chaser now. I chase and collect letters by playing rock, paper, scissors. Now move to next instructions."
+      ]
+    },
+    {
+      "id": "card-03",
+      "image": "/chaser-game-instructions/instructions-chaser.png",
+      "instructions": [
+        "Before we jump to main instructions, I want you to know what these buttons mean."
+      ]
+    },
+    {
+      "id": "card-04",
+      "image": "/chaser-game-instructions/instructions-chaser.png",
+      "instructions": [
+        "You can use ← → arrow keys on your keyboard or click the left/right buttons to navigate through these instructions."
+      ]
+    },
+    {
+      "id": "card-05",
+      "image": "/chaser-game-instructions/who-beats-who.png",
+      "instructions": [
+        "Ok. Rock beats scissors, scissors beat paper and paper beats rock (you know this already, huh?)"
+      ]
+    },
+    {
+      "id": "card-06",
+      "image": "/chaser-game-instructions/who-beats-who.png",
+      "instructions": [
+        "Well, as a chaser you have to play this game so many times."
+      ]
+    },
+    {
+      "id": "card-07",
+      "image": "/chaser-game-instructions/ch-ins-1.jpg",
+      "instructions": [
+        "In the main screen, choose any symbol to start the chaser game."
+      ]
+    },
+    {
+      "id": "card-08",
+      "image": "/chaser-game-instructions/ch-ins-1.jpg",
+      "instructions": [
+        "That symbol you choose will be your first symbol in the chaser game."
+      ]
+    },
+    {
+      "id": "card-09",
+      "image": "/chaser-game-instructions/ch-ins-2.jpg",
+      "instructions": [
+        "You are currently in your \"how to play\" page."
+      ]
+    },
+    {
+      "id": "card-10",
+      "image": "/chaser-game-instructions/ch-ins-3.jpg",
+      "instructions": [
+        "At the top left of this main menu above, you can press the leaderboard button to see top 10 contributors."
+      ]
+    },
+    {
+      "id": "card-11",
+      "image": "/chaser-game-instructions/ch-ins-4.jpg",
+      "instructions": [
+        "In the leaderboard page, you can tap chaser, phraser or sharer buttons to see top 10 chasers, phrasers or sharers respectively."
+      ]
+    },
+    {
+      "id": "card-12",
+      "image": "/chaser-game-instructions/ch-ins-5.jpg",
+      "instructions": [
+        "Press back button to go back to main menu (here as well, but not now)."
+      ]
+    },
+    {
+      "id": "card-13",
+      "image": "/chaser-game-instructions/ch-ins-6.jpg",
+      "instructions": [
+        "After you choose your symbol (let's say stone), this is how you look in the chaser game."
+      ]
+    },
+    {
+      "id": "card-14",
+      "image": "/chaser-game-instructions/ch-ins-7.jpg",
+      "instructions": [
+        "In front of you, there will be 3 lanes with 3 obstacles, each of them with a letter and are of different symbol."
+      ]
+    },
+    {
+      "id": "card-15",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "The number near the trophy symbol is your score."
+      ]
+    },
+    {
+      "id": "card-16",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "If you win against your obstacle with full 3 lives, you get 2 points, and with less than 3 lives you get 1 point."
+      ]
+    },
+    {
+      "id": "card-17",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "If you draw, you get no points and you lose a life."
+      ]
+    },
+    {
+      "id": "card-18",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "If you lose against your obstacle, you lose all your lives and the game's over."
+      ]
+    },
+    {
+      "id": "card-19",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "On mobile/tablet: Tap on the lane you want to move to. From lane 2, tap lane 1 or 3. From lanes 1 or 3, tap lane 2. You can also tap directly from lane 1 to 3 or vice versa."
+      ]
+    },
+    {
+      "id": "card-20",
+      "image": "/chaser-game-instructions/ch-ins-8.jpg",
+      "instructions": [
+        "On laptop/desktop: Use arrow keys (← →) or A/D keys to move your character left or right."
+      ]
+    },
+    {
+      "id": "card-21",
+      "image": "/chaser-game-instructions/ch-ins-9.jpg",
+      "instructions": [
+        "You can play as long as you have at least one life. (I didn't mean literally *nervously smiles*)"
+      ]
+    },
+    {
+      "id": "card-22",
+      "image": "/chaser-game-instructions/ch-ins-9.jpg",
+      "instructions": [
+        "If you win or draw against your obstacle, you collect its letter. Else you don't."
+      ]
+    },
+    {
+      "id": "card-23",
+      "image": "/chaser-game-instructions/ch-ins-10.jpg",
+      "instructions": [
+        "To the top of the screen you see some of the recent letters you have collected."
+      ]
+    },
+    {
+      "id": "card-24",
+      "image": "/chaser-game-instructions/ch-ins-11.jpg",
+      "instructions": [
+        "After the game gets over, you can see all the letters you have collected."
+      ]
+    },
+    {
+      "id": "card-25",
+      "image": "/chaser-game-instructions/ch-ins-12.jpg",
+      "instructions": [
+        "You can see that you need to collect at least 10 letters to share your letters to create a phraser game."
+      ]
+    },
+    {
+      "id": "card-26",
+      "image": "/chaser-game-instructions/ch-ins-13.jpg",
+      "instructions": [
+        "You can click \"play again\" to go back to main menu, this won't share your letters if you didn't share it before clicking it."
+      ]
+    },
+    {
+      "id": "card-27",
+      "image": "/chaser-game-instructions/ch-ins-14.jpg",
+      "instructions": [
+        "If you have collected at least 10 letters, you can share your letters which will be used in a phraser game by clicking that share button."
+      ]
+    },
+    {
+      "id": "card-28",
+      "image": "/chaser-game-instructions/ch-ins-15.jpg",
+      "instructions": [
+        "You can see that after you clicked share once, if your post is successfully shared, your share button is now disabled, so that one phraser game is only created with those letters."
+      ]
+    },
+    {
+      "id": "card-29",
+      "image": "/chaser-game-instructions/ch-ins-16.jpg",
+      "instructions": [
+        "You can tap on the link, select it and copy to share the link in other messaging platforms, or you can paste in your browser to play the phraser game."
+      ]
+    },
+    {
+      "id": "card-30",
+      "image": "/chaser-game-instructions/chaser.gif",
+      "instructions": [
+        "That's it! Now go chase! Do you remember? Click \"back button\" at the top corner to go back to main menu."
+      ]
+    }
+  ]
+}

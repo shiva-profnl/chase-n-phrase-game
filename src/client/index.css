@@ -1,0 +1,881 @@
+@import 'tailwindcss';
+
+/* Indie Flower Font Styling - Expressive and Playful */
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+
+/* Viewport and responsive base */
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  /* Allow vertical scrolling when needed */
+  min-height: 100vh;
+  width: 100vw;
+}
+
+/* Allow scrolling on containers that need it */
+.main-bg {
+  min-height: 100vh;
+  width: 100vw;
+  /* Allow content to scroll if it exceeds viewport */
+}
+
+.sub-bg-blue, .sub-bg-orange, .sub-bg-pink {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Stretch to fit the container like leaderboard rows */
+}
+
+/* Background Classes */
+.main-bg {
+  background-image: url('/backgrounds/main-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.sub-bg-blue {
+  background-image: url('/backgrounds/sub-bg-blue.png');
+}
+
+.sub-bg-orange {
+  background-image: url('/backgrounds/sub-bg-orange.png');
+}
+
+.sub-bg-pink {
+  background-image: url('/backgrounds/sub-bg-pink.png');
+}
+
+/* Game UI Background Sections */
+.hud-section {
+  background-image: url('/backgrounds/sub-bg-pink.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.letters-section {
+  background-image: url('/backgrounds/sub-bg-pink.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.score-section {
+  background-image: url('/backgrounds/sub-bg-pink.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.leaderboard-row {
+  background-image: url('/backgrounds/sub-bg-pink.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.25rem;
+  /* Height 1% bigger than text */
+  min-height: 1.01em;
+  line-height: 1.01;
+}
+
+/* Button Classes */
+.btn-back {
+  background-image: url('/buttons/navigation/back.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-how-to-play {
+  background-image: url('/buttons/navigation/how-to-play.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-leaderboard {
+  background-image: url('/buttons/navigation/leaderboard.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-play-again {
+  background-image: url('/buttons/game-controls/play-again.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-start-game {
+  background-image: url('/buttons/game-controls/start-game.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-show-letters {
+  background-image: url('/buttons/game-controls/show-letters.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-submit-enabled {
+  background-image: url('/buttons/phraser-controls/submit-enabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-submit-disabled {
+  background-image: url('/buttons/phraser-controls/submit-disabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-clear-enabled {
+  background-image: url('/buttons/phraser-controls/clear-enabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-clear-disabled {
+  background-image: url('/buttons/phraser-controls/clear-disabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-end-game {
+  background-image: url('/buttons/phraser-controls/end-game.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-end-game-large {
+  background-image: url('/buttons/phraser-controls/end-game.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+  width: 12vw;
+  height: 12vw;
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 6rem;
+  max-height: 6rem;
+}
+
+.btn-letterbox {
+  background-image: url('/buttons/phraser-controls/letterbox.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-share-enabled {
+  background-image: url('/buttons/share-controls/share-enabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-share-disabled {
+  background-image: url('/buttons/share-controls/share-disabled.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-share-only-once {
+  background-image: url('/buttons/share-controls/share-only-once.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+/* Sound control buttons */
+.btn-sound-control {
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  max-width: 3rem;
+  max-height: 3rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.btn-sound-on {
+  background-image: url('/buttons/sound-controls/sound-on.png');
+}
+
+.btn-sound-off {
+  background-image: url('/buttons/sound-controls/sound-off.png');
+}
+
+.btn-music-on {
+  background-image: url('/buttons/sound-controls/music-on.png');
+}
+
+.btn-music-off {
+  background-image: url('/buttons/sound-controls/music-off.png');
+}
+
+.btn-rock {
+  background-image: url('/buttons/rps-buttons/rock.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-paper {
+  background-image: url('/buttons/rps-buttons/paper.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-scissors {
+  background-image: url('/buttons/rps-buttons/scissors.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-chaser {
+  background-image: url('/buttons/leaderboard/chaser.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-phraser {
+  background-image: url('/buttons/leaderboard/phraser.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+.btn-sharer {
+  background-image: url('/buttons/leaderboard/sharer.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: none;
+  background-color: transparent;
+}
+
+/* Game Element Classes */
+.game-track {
+  background-image: url('/game-elements/track.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.trophy-icon {
+  background-image: url('/game-elements/trophy.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.life-gain {
+  background-image: url('/game-elements/life-gain.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.life-lost {
+  background-image: url('/game-elements/life-lost.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Game Logo - Responsive IMG Tag for Actual Scaling */
+.game-logo {
+  width: auto;
+  height: auto;
+  max-width: 50vw;
+  max-height: 33vh;
+  min-width: 20rem;
+  min-height: 13rem;
+  pointer-events: none;
+  user-select: none;
+  transition: all 0.3s ease-in-out;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  align-self: center;
+  /* Ensure the image actually scales */
+  transform-origin: center;
+  will-change: transform;
+  /* Force transparency - remove any background */
+  background: none !important;
+  background-color: transparent !important;
+  /* Ensure no black background from browser rendering */
+  image-rendering: auto;
+  /* Better centering */
+  text-align: center;
+  align-self: center;
+  /* No debug border */
+  border: none;
+  outline: none;
+  /* Additional transparency fixes for GIFs */
+  mix-blend-mode: normal;
+  opacity: 1;
+  /* Ensure the image itself is transparent */
+  filter: none;
+  /* Better center alignment */
+  text-align: center;
+  align-self: center;
+}
+
+/* Responsive Game Elements */
+.trophy-icon {
+  width: 3vw;
+  height: 3vw;
+  min-width: 2rem;
+  min-height: 2rem;
+  max-width: 4rem;
+  max-height: 4rem;
+}
+
+.life-gain, .life-lost {
+  width: 2.5vw;
+  height: 2.5vw;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  max-width: 3rem;
+  max-height: 3rem;
+}
+
+.game-track {
+  min-height: 8vh;
+}
+
+/* Responsive Text Sizing - Viewport Based (Reduced by 3-4%) */
+.score-text, .lives-text, .letters-text {
+  font-size: clamp(0.96rem, 2.4vw, 1.92rem);
+  font-weight: bold;
+}
+
+.letter-display {
+  font-size: clamp(1.2rem, 2.88vw, 2.4rem);
+  font-weight: bold;
+}
+
+/* Page Title Text */
+.page-title {
+  font-size: clamp(1.44rem, 3.84vw, 2.88rem);
+  font-weight: bold;
+}
+
+/* Section Title Text */
+.section-title {
+  font-size: clamp(1.2rem, 2.88vw, 2.4rem);
+  font-weight: bold;
+}
+
+/* Body Text */
+.body-text {
+  font-size: clamp(0.84rem, 1.92vw, 1.44rem);
+  font-weight: 500;
+}
+
+/* Small Text */
+.small-text {
+  font-size: clamp(0.72rem, 1.44vw, 0.96rem);
+  font-weight: 400;
+}
+
+/* Responsive text for letter buttons */
+.text-responsive {
+  font-size: 1.5rem;
+}
+
+/* Responsive width for words formed section */
+.w-responsive {
+  width: clamp(16rem, 80vw, 24rem);
+}
+
+/* Responsive margin for desktop spacing */
+.mt-responsive {
+  margin-top: clamp(12rem, 22vh, 25rem);
+}
+
+/* Responsive text for section titles */
+.text-responsive-title {
+  font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+}
+
+/* Responsive text for section content */
+.text-responsive-content {
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+}
+
+/* Non-copiable text for anti-cheat */
+.non-copiable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Game Sprites */
+.game-sprite {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Player Sprite */
+.player-sprite {
+  width: 5rem;
+  height: 5rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Obstacle Sprite */
+.obstacle-sprite {
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Responsive Button Sizing - Larger, More Viewable Buttons */
+/* Base sizes for very small screens (320px+) */
+.btn-back, .btn-how-to-play, .btn-leaderboard {
+  width: 20vw;
+  height: 20vw;
+  min-width: 6rem;
+  min-height: 6rem;
+  max-width: 10rem;
+  max-height: 10rem;
+}
+
+.btn-play-again, .btn-start-game, .btn-show-letters {
+  width: 20vw;
+  height: 20vw;
+  min-width: 6rem;
+  min-height: 6rem;
+  max-width: 10rem;
+  max-height: 10rem;
+}
+
+.btn-submit-enabled, .btn-submit-disabled, .btn-clear-enabled, .btn-clear-disabled {
+  width: 19.4vw;
+  height: 19.4vw;
+  min-width: 5.8rem;
+  min-height: 5.8rem;
+  max-width: 9.7rem;
+  max-height: 9.7rem;
+}
+
+.btn-rock, .btn-paper, .btn-scissors {
+  width: 14vw;
+  height: 14vw;
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 7rem;
+  max-height: 7rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-letterbox {
+  width: 4rem;
+  height: 4rem;
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 4rem;
+  max-height: 4rem;
+}
+
+.btn-share-enabled, .btn-share-disabled, .btn-share-only-once {
+  width: 20vw;
+  height: 20vw;
+  min-width: 6rem;
+  min-height: 6rem;
+  max-width: 10rem;
+  max-height: 10rem;
+}
+
+.btn-chaser, .btn-phraser, .btn-sharer {
+  width: 20vw;
+  height: 20vw;
+  min-width: 6rem;
+  min-height: 6rem;
+  max-width: 10rem;
+  max-height: 10rem;
+}
+
+.btn-end-game {
+  width: 8vw;
+  height: 8vw;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  max-width: 4rem;
+  max-height: 4rem;
+}
+
+.btn-end-game-large {
+  width: 12vw;
+  height: 12vw;
+  min-width: 4rem;
+  min-height: 4rem;
+  max-width: 6rem;
+  max-height: 6rem;
+}
+
+/* Mobile screens - smaller GIF */
+@media (max-width: 767px) {
+  .game-logo {
+    max-width: 42vw;
+    max-height: 28vh;
+    transform: scale(0.8);
+    /* Better mobile centering */
+    margin: 0 auto;
+    display: block;
+    text-align: center;
+    align-self: center;
+  }
+}
+
+/* Tablet and larger screens - maintain larger button sizes */
+@media (min-width: 768px) {
+  .btn-back, .btn-how-to-play, .btn-leaderboard,
+  .btn-play-again, .btn-start-game, .btn-show-letters,
+  .btn-submit-enabled, .btn-submit-disabled, .btn-clear-enabled, .btn-clear-disabled,
+  .btn-letterbox, .btn-share-enabled, .btn-share-disabled, .btn-share-only-once,
+  .btn-chaser, .btn-phraser, .btn-sharer, .btn-end-game, .btn-end-game-large {
+    width: 12vw;
+    height: 12vw;
+    max-width: 12rem;
+    max-height: 12rem;
+  }
+  
+  .btn-rock, .btn-paper, .btn-scissors {
+    width: 8vw;
+    height: 8vw;
+    max-width: 8rem;
+    max-height: 8rem;
+  }
+  
+  .game-logo {
+    max-width: 57vw;
+    max-height: 38vh;
+    transform: scale(0.9);
+  }
+}
+
+/* Large screens - better GIF scaling */
+@media (min-width: 1024px) {
+  .game-logo {
+    max-width: 60vw;
+    max-height: 40vh;
+    transform: scale(1.0);
+  }
+}
+
+/* Extra large screens - optimal GIF size */
+@media (min-width: 1440px) {
+  .game-logo {
+    max-width: 63vw;
+    max-height: 42vh;
+    transform: scale(1.1);
+  }
+}
+
+
+/* Smooth transitions for responsive elements */
+.btn-back, .btn-how-to-play, .btn-leaderboard,
+.btn-play-again, .btn-start-game, .btn-show-letters,
+.btn-submit-enabled, .btn-submit-disabled, .btn-clear-enabled, .btn-clear-disabled,
+.btn-rock, .btn-paper, .btn-scissors,
+.btn-letterbox, .btn-share-enabled, .btn-share-disabled,
+.btn-chaser, .btn-phraser, .btn-sharer, .btn-end-game, .btn-end-game-large,
+.game-logo, .trophy-icon, .life-gain, .life-lost {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+/* Loading Screen Animations */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Loading Screen Styles */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.loading-screen.dark {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.loading-screen.light {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.loading-progress {
+  width: 20rem;
+  max-width: 24rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: #374151;
+  transition: all 0.3s ease;
+}
+
+.loading-progress.dark {
+  background-color: #374151;
+}
+
+.loading-progress.light {
+  background-color: #374151;
+}
+
+.loading-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.loading-progress-fill.dark {
+  background-color: #ffffff;
+}
+
+.loading-progress-fill.light {
+  background-color: #ffffff;
+}
+
+/* Hover effects for better interactivity */
+.btn-back:hover, .btn-how-to-play:hover, .btn-leaderboard:hover,
+.btn-play-again:hover, .btn-start-game:hover, .btn-show-letters:hover,
+.btn-submit-enabled:hover, .btn-clear-enabled:hover,
+.btn-rock:hover, .btn-paper:hover, .btn-scissors:hover,
+.btn-letterbox:hover, .btn-share-enabled:hover, .btn-share-only-once:hover,
+.btn-chaser:hover, .btn-phraser:hover, .btn-sharer:hover, .btn-end-game:hover, .btn-end-game-large:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Mobile sizing */
+@media (max-width: 768px) {
+  .btn-back, .btn-how-to-play, .btn-leaderboard,
+  .btn-rock, .btn-paper, .btn-scissors {
+    min-height: 2.75rem; /* iOS recommended touch target */
+    min-width: 2.75rem;
+  }
+  .btn-letterbox {
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
+    max-width: 3rem;
+    max-height: 3rem;
+  }
+  .text-responsive {
+    font-size: 1.8rem;
+  }
+}
+
+/* Tablet sizing */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .btn-letterbox {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+    max-width: 3.5rem;
+    max-height: 3.5rem;
+  }
+  .text-responsive {
+    font-size: 2.1rem;
+  }
+}
+
+/* Desktop sizing */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .btn-letterbox {
+    width: 4rem;
+    height: 4rem;
+    min-width: 4rem;
+    min-height: 4rem;
+    max-width: 4rem;
+    max-height: 4rem;
+  }
+  .text-responsive {
+    font-size: 2.5rem;
+  }
+}
+
+/* Fullscreen/Large desktop sizing */
+@media (min-width: 1441px) {
+  .btn-letterbox {
+    width: 4.5rem;
+    height: 4.5rem;
+    min-width: 4.5rem;
+    min-height: 4.5rem;
+    max-width: 4.5rem;
+    max-height: 4.5rem;
+  }
+  .text-responsive {
+    font-size: 3.2rem;
+  }
+}
+
+
+/* Global Indie Flower font application */
+* {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  color: black !important;
+}
+
+/* Loading screen text override */
+.loading-screen * {
+  color: white !important;
+}
+
+/* Enhanced Indie Flower styling for different elements */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.5px !important;
+}
+
+button {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.3px !important;
+}
+
+input, textarea {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+}
+
+/* Special styling for game elements */
+.game-title {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.8px !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.score-text {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.4px !important;
+}
+
+.menu-button {
+  font-family: 'Indie Flower', cursive, sans-serif !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.3px !important;
+}

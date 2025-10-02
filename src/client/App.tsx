@@ -4,6 +4,7 @@ import ChaserGame from "./pages/ChaserGame";
 import { PhraserGameWrapper } from "./components/PhraserGameWrapper";
 import { LoadingScreen } from "./components/LoadingScreen";
 import { useCurrentUserId } from "./hooks/useCurrentUserId";
+import { initializeCacheManager } from "./utils/cacheManager";
 
 export const App = () => {
   const { userId: currentUserId, username: currentUsername } = useCurrentUserId();
@@ -12,6 +13,11 @@ export const App = () => {
   const [loading, setLoading] = useState(true);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [needsAssetLoading, setNeedsAssetLoading] = useState(false);
+
+  // Initialize cache manager on app start
+  useEffect(() => {
+    initializeCacheManager().catch(console.error);
+  }, []);
 
   useEffect(() => {
     async function fetchGameType() {
@@ -47,17 +53,8 @@ export const App = () => {
               })();
               
               // For phraser games, check if user has already played before loading assets
-              console.log('=== APP.TSX DEBUG ===');
-              console.log('Game type:', postData.gameType);
-              console.log('Current user ID:', currentUserId);
-              console.log('Effective user ID:', effectiveUserId);
-              console.log('Is phraser game:', postData.gameType === 'phraser');
-              console.log('Has user ID:', !!effectiveUserId);
-              console.log('Condition met:', postData.gameType === 'phraser' && effectiveUserId);
               
               if (postData.gameType === 'phraser' && effectiveUserId) {
-                console.log('=== PHRASER GAME DETECTED ===');
-                console.log('PostId:', id, 'UserId:', effectiveUserId);
                 try {
                   const statusRes = await fetch('/api/check-play-status', {
                     method: 'POST',
@@ -67,35 +64,27 @@ export const App = () => {
                   
                   if (statusRes.ok) {
                     const statusData = await statusRes.json();
-                    console.log('Play status response:', statusData);
                     // Only load assets if user can actually play
                     if (statusData.canPlay) {
-                      console.log('User can play - loading assets');
                       setNeedsAssetLoading(true);
                       setShowLoadingScreen(true);
                     } else {
-                      console.log('User has already played - skipping asset loading');
                       // User has already played - don't load assets
                       setNeedsAssetLoading(false);
                       setShowLoadingScreen(false);
                     }
                   } else {
-                    console.log('Status check failed - loading assets to be safe');
                     // If we can't check status, load assets to be safe
                     setNeedsAssetLoading(true);
                     setShowLoadingScreen(true);
                   }
                 } catch (err) {
-                  console.log('Status check error - loading assets to be safe:', err);
                   // If check fails, load assets to be safe
                   setNeedsAssetLoading(true);
                   setShowLoadingScreen(true);
                 }
               } else {
                 // For chaser games or when no userId, always load assets
-                console.log('=== ELSE CONDITION TRIGGERED ===');
-                console.log('Not a phraser game or no userId - loading assets');
-                console.log('Game type:', postData.gameType, 'Has userId:', !!currentUserId);
                 setNeedsAssetLoading(true);
                 setShowLoadingScreen(true);
               }

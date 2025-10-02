@@ -33,12 +33,28 @@ export const PhraserGame: React.FC<PhraserGameProps> = ({ letters, onGameComplet
   const [previewTimeLeft, setPreviewTimeLeft] = useState<number>(10); // 10 seconds preview
   const [showInstructions, setShowInstructions] = useState(false);
 
+  // Detect iOS for special handling
+  const isIOS = useCallback(() => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }, []);
+
   const timeLimit = calculateTimeLimit(letters);
   
-  // Responsive grid columns based on screen size
+  // Responsive grid columns based on screen size with iOS optimizations
   const [gridColumns, setGridColumns] = useState(() => {
     if (typeof window !== 'undefined') {
       const width = window.innerWidth;
+      const isIOSDevice = isIOS();
+      
+      // iOS-specific sizing adjustments
+      if (isIOSDevice) {
+        if (width >= 1440) return 5; // iOS: 5 letters for large screens
+        if (width >= 1024) return 4; // iOS: 4 letters for tablets
+        return 3; // iOS: 3 letters for phones (smaller for better touch)
+      }
+      
+      // Standard sizing for other devices
       if (width >= 1440) return 6; // Fullscreen: 6 letters
       if (width >= 1024) return 5; // Desktop: 5 letters
       return 4; // Mobile/Tablet: 4 letters
@@ -46,20 +62,28 @@ export const PhraserGame: React.FC<PhraserGameProps> = ({ letters, onGameComplet
     return 4; // Default fallback
   });
 
-  // Update grid columns on window resize
+  // Update grid columns on window resize with iOS optimizations
   useEffect(() => {
     const handleResize = () => {
       if (typeof window !== 'undefined') {
         const width = window.innerWidth;
-        if (width >= 1440) setGridColumns(6);
-        else if (width >= 1024) setGridColumns(5);
-        else setGridColumns(4);
+        const isIOSDevice = isIOS();
+        
+        if (isIOSDevice) {
+          if (width >= 1440) setGridColumns(5);
+          else if (width >= 1024) setGridColumns(4);
+          else setGridColumns(3);
+        } else {
+          if (width >= 1440) setGridColumns(6);
+          else if (width >= 1024) setGridColumns(5);
+          else setGridColumns(4);
+        }
       }
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isIOS]);
   
   const letterGrid = arrangeLettersInGrid(availableLetters, gridColumns);
 

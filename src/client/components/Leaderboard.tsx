@@ -18,13 +18,18 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBack, currentUserId 
   const fetchLeaderboard = async (type: LeaderboardType) => {
     setLoading(true);
     try {
+      
       const response = await fetch(`/api/leaderboard?type=${type}&currentUserId=${currentUserId || ''}`);
+      
       const data = await response.json();
+      
       if (data.success) {
         setLeaderboardData(data.data);
+      } else {
+        console.error('=== CLIENT: Request failed:', data.message);
       }
     } catch (error) {
-      console.error('Failed to fetch leaderboard:', error);
+      console.error('=== CLIENT: Failed to fetch leaderboard:', error);
     } finally {
       setLoading(false);
     }
@@ -44,16 +49,18 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBack, currentUserId 
     onBack();
   };
 
-  const renderLeaderboardEntry = (entry: LeaderboardEntry, index: number) => (
-    <div key={entry.userId} className="leaderboard-row flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="font-semibold text-black body-text">{entry.username}</div>
+  const renderLeaderboardEntry = (entry: LeaderboardEntry, index: number) => {
+    return (
+      <div key={entry.userId} className="leaderboard-row flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="font-semibold text-black body-text">{entry.username}</div>
+        </div>
+        <div className="text-right">
+          <div className="font-bold text-black score-text">{entry.score}</div>
+        </div>
       </div>
-      <div className="text-right">
-        <div className="font-bold text-black score-text">{entry.score}</div>
-      </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="min-h-screen w-screen main-bg flex flex-col items-center justify-start p-4 py-8">

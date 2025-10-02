@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { OptimizedImageLoader } from '../utils/imageLoader';
 
 type LoadingScreenProps = {
   gameType: 'chaser' | 'phraser';
@@ -7,11 +8,69 @@ type LoadingScreenProps = {
   userId?: string;
 };
 
+type AssetType = 'image' | 'audio' | 'gif';
+
+interface AssetInfo {
+  path: string;
+  type: AssetType;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  size?: number;
+}
+
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ gameType, onLoadingComplete, postId, userId }) => {
   const [progress, setProgress] = useState(0);
   const [currentAsset, setCurrentAsset] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState<string | null>(null);
+
+  // Asset loading cache to prevent re-loading
+  const assetCache = useCallback(() => {
+    const cache = new Map<string, boolean>();
+    return {
+      isLoaded: (path: string) => cache.get(path) || false,
+      markLoaded: (path: string) => cache.set(path, true),
+      clear: () => cache.clear()
+    };
+  }, []);
+
+  // Optimized asset loader with retry logic and timeout
+  const loadAsset = useCallback(async (asset: AssetInfo, timeoutMs: number = 10000): Promise<boolean> => {
+    try {
+      if (asset.type === 'audio') {
+        return new Promise((resolve) => {
+          const timer = setTimeout(() => {
+            console.warn(`Audio loading timeout: ${asset.path}`);
+            resolve(false);
+          }, timeoutMs);
+
+          const audio = new Audio();
+          audio.oncanplaythrough = () => {
+            clearTimeout(timer);
+            resolve(true);
+          };
+          audio.onerror = () => {
+            clearTimeout(timer);
+            console.warn(`Failed to load audio: ${asset.path}`);
+            resolve(false);
+          };
+          audio.src = asset.path;
+        });
+      } else {
+        // Use optimized image loader for images and GIFs
+        const imageLoader = OptimizedImageLoader.getInstance();
+        const result = await imageLoader.loadImage(asset.path, {
+          timeout: timeoutMs,
+          retries: 2,
+          useWebP: false
+        });
+        return result.success;
+      }
+    } catch (error) {
+      console.warn(`Error loading asset ${asset.path}:`, error);
+      return false;
+    }
+  }, []);
 
   // Detect dark/light mode
   useEffect(() => {
@@ -28,251 +87,259 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ gameType, onLoadin
     return () => mediaQuery.removeEventListener('change', checkDarkMode);
   }, []);
 
-  // Pre-load all assets for the entire game flow
+  // Detect iOS for special handling
+  const isIOS = useCallback(() => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }, []);
+
+  // Optimized asset loading with priority system and caching
   useEffect(() => {
-    // Prevent multiple loading attempts
     if (isLoading) return;
     setIsLoading(true);
+    setLoadingError(null);
 
     const loadAllAssets = async () => {
-      // For phraser games, check if user has already played
-      if (gameType === 'phraser' && postId && userId) {
-        // Try to get the Reddit user ID from the URL context first
-        let effectiveUserId = userId;
-        try {
-          const urlParams = new URLSearchParams(window.location.search);
-          const contextParam = urlParams.get('context');
-          if (contextParam) {
-            const context = JSON.parse(decodeURIComponent(contextParam));
-            if (context.userId) {
-              effectiveUserId = context.userId;
-            }
-          }
-        } catch (e) {
-          // Could not parse context, using provided userId
-        }
-        
-        try {
-          const statusRes = await fetch('/api/check-play-status', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ postId, userId: effectiveUserId })
-          });
-          
-          if (statusRes.ok) {
-            const statusData = await statusRes.json();
-            
-            if (!statusData.canPlay) {
-              setCurrentAsset('Loading essential backgrounds...');
-              
-              // Load only essential backgrounds for already-played games
-              const essentialAssets = [
-                '/backgrounds/main-bg.png',
-                '/backgrounds/sub-bg-blue.png', 
-                '/backgrounds/sub-bg-orange.png',
-                '/game-elements/trophy.png'
-              ];
-              
-              let loadedCount = 0;
-              for (const asset of essentialAssets) {
-                try {
-                  await new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.onload = () => {
-                      loadedCount++;
-                      setProgress((loadedCount / essentialAssets.length) * 100);
-                      setCurrentAsset(`Loaded ${asset.split('/').pop()}`);
-                      resolve(img);
-                    };
-                    img.onerror = reject;
-                    img.src = asset;
-                  });
-                } catch (error) {
-                  console.warn(`Failed to load ${asset}:`, error);
-                  loadedCount++;
-                  setProgress((loadedCount / essentialAssets.length) * 100);
-                }
+      try {
+        // Check if user has already played (for phraser games)
+        if (gameType === 'phraser' && postId && userId) {
+          let effectiveUserId = userId;
+          try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const contextParam = urlParams.get('context');
+            if (contextParam) {
+              const context = JSON.parse(decodeURIComponent(contextParam));
+              if (context.userId) {
+                effectiveUserId = context.userId;
               }
-              
-              setCurrentAsset('Game ready');
-              setTimeout(onLoadingComplete, 100);
-              return;
             }
+          } catch (e) {
+            // Could not parse context, using provided userId
           }
-        } catch (error) {
-          // Play status check failed, loading assets anyway
+          
+          try {
+            const statusRes = await fetch('/api/check-play-status', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ postId, userId: effectiveUserId })
+            });
+            
+            if (statusRes.ok) {
+              const statusData = await statusRes.json();
+              
+              if (!statusData.canPlay) {
+                setCurrentAsset('Loading essential assets...');
+                
+                // Load only critical assets for already-played games
+                const criticalAssets: AssetInfo[] = [
+                  { path: '/backgrounds/main-bg.png', type: 'image', priority: 'critical' },
+                  { path: '/backgrounds/sub-bg-blue.png', type: 'image', priority: 'critical' },
+                  { path: '/backgrounds/sub-bg-orange.png', type: 'image', priority: 'critical' },
+                  { path: '/game-elements/trophy.png', type: 'image', priority: 'critical' },
+                  { path: '/ui/game-logo.gif', type: 'gif', priority: 'critical' }
+                ];
+                
+                await loadAssetsByPriority(criticalAssets);
+                setCurrentAsset('Game ready');
+                setTimeout(onLoadingComplete, 100);
+                return;
+              }
+            }
+          } catch (error) {
+            console.warn('Play status check failed, loading all assets:', error);
+          }
         }
-      }      
-      // Define common assets that both games need
-      const commonAssets = [
-        '/backgrounds/main-bg.png',
-        '/backgrounds/sub-bg-orange.png',
-        '/backgrounds/sub-bg-blue.png',
-        '/backgrounds/sub-bg-pink.png',
-        '/ui/game-logo.gif',
-        '/game-elements/trophy.png',
-        '/buttons/navigation/how-to-play.png',
-        '/buttons/navigation/back.png',
-        // Sound control buttons
-        '/buttons/sound-controls/sound-on.png',
-        '/buttons/sound-controls/sound-off.png',
-        // Navigation buttons
-        '/buttons/how-to-play-buttons/left-active.png',
-        '/buttons/how-to-play-buttons/left-inactive.png',
-        '/buttons/how-to-play-buttons/right-active.png',
-        '/buttons/how-to-play-buttons/right-inactive.png',
+
+        // Define all assets with priority levels
+        const allAssets = getAssetsByGameType(gameType);
+        
+        // Load assets by priority for optimal user experience
+        await loadAssetsByPriority(allAssets);
+        
+        setCurrentAsset('Ready to play!');
+        setProgress(100);
+        setTimeout(onLoadingComplete, 300);
+        
+      } catch (error) {
+        console.error('Asset loading failed:', error);
+        setLoadingError('Failed to load some assets. Game may not work properly.');
+        // Still complete loading to prevent infinite loading screen
+        setTimeout(onLoadingComplete, 1000);
+      }
+    };
+
+    const getAssetsByGameType = (gameType: 'chaser' | 'phraser'): AssetInfo[] => {
+      const commonAssets: AssetInfo[] = [
+        // Critical assets (load first)
+        { path: '/backgrounds/main-bg.png', type: 'image', priority: 'critical' },
+        { path: '/ui/game-logo.gif', type: 'gif', priority: 'critical' },
+        { path: '/game-elements/trophy.png', type: 'image', priority: 'critical' },
+        
+        // High priority assets
+        { path: '/backgrounds/sub-bg-orange.png', type: 'image', priority: 'high' },
+        { path: '/backgrounds/sub-bg-blue.png', type: 'image', priority: 'high' },
+        { path: '/backgrounds/sub-bg-pink.png', type: 'image', priority: 'high' },
+        { path: '/buttons/navigation/how-to-play.png', type: 'image', priority: 'high' },
+        { path: '/buttons/navigation/back.png', type: 'image', priority: 'high' },
+        { path: '/buttons/sound-controls/sound-on.png', type: 'image', priority: 'high' },
+        { path: '/buttons/sound-controls/sound-off.png', type: 'image', priority: 'high' },
+        
+        // Medium priority assets
+        { path: '/buttons/how-to-play-buttons/left-active.png', type: 'image', priority: 'medium' },
+        { path: '/buttons/how-to-play-buttons/left-inactive.png', type: 'image', priority: 'medium' },
+        { path: '/buttons/how-to-play-buttons/right-active.png', type: 'image', priority: 'medium' },
+        { path: '/buttons/how-to-play-buttons/right-inactive.png', type: 'image', priority: 'medium' },
+        
+        // Low priority assets (instruction images) - only load for current game type
+        ...(gameType === 'chaser' ? Array.from({ length: 16 }, (_, i) => ({
+          path: `/chaser-game-instructions/ch-ins-${i + 1}.jpg`,
+          type: 'image' as AssetType,
+          priority: 'low' as const
+        })) : []),
+        ...(gameType === 'phraser' ? Array.from({ length: 14 }, (_, i) => ({
+          path: `/phraser-game-instructions/ph-ins-${i + 1}.jpg`,
+          type: 'image' as AssetType,
+          priority: 'low' as const
+        })) : [])
       ];
 
-      // Define game-specific assets
-      let gameSpecificAssets: string[] = [];
-      
       if (gameType === 'chaser') {
-        gameSpecificAssets = [
-          '/buttons/share-controls/share-enabled.png',
-          '/buttons/share-controls/share-disabled.png',
-          '/buttons/share-controls/share-only-once.png',
-          '/buttons/leaderboard/chaser.png',
-          '/buttons/leaderboard/phraser.png',
-          '/buttons/leaderboard/sharer.png',
-          '/game-elements/track.png',
-          '/game-elements/life-gain.png',
-          '/game-elements/life-lost.png',
-          '/buttons/navigation/leaderboard.png',
-          '/buttons/rps-buttons/rock.png',
-          '/buttons/rps-buttons/paper.png',
-          '/buttons/rps-buttons/scissors.png',
-          '/buttons/game-controls/play-again.png',
-          // Chaser-specific sounds
-          '/sounds/chaser-swap-track.m4a',
-          '/sounds/game-button-click.m4a',
-          '/sounds/point.mp3',
-          '/sounds/no-point.mp3',
-          // Chaser instruction images
-          '/chaser-game-instructions/chaser.gif',
-          '/chaser-game-instructions/instructions-chaser.png',
-          '/chaser-game-instructions/who-beats-who.png',
-          '/chaser-game-instructions/ch-ins-1.jpg',
-          '/chaser-game-instructions/ch-ins-2.jpg',
-          '/chaser-game-instructions/ch-ins-3.jpg',
-          '/chaser-game-instructions/ch-ins-4.jpg',
-          '/chaser-game-instructions/ch-ins-5.jpg',
-          '/chaser-game-instructions/ch-ins-6.jpg',
-          '/chaser-game-instructions/ch-ins-7.jpg',
-          '/chaser-game-instructions/ch-ins-8.jpg',
-          '/chaser-game-instructions/ch-ins-9.jpg',
-          '/chaser-game-instructions/ch-ins-10.jpg',
-          '/chaser-game-instructions/ch-ins-11.jpg',
-          '/chaser-game-instructions/ch-ins-12.jpg',
-          '/chaser-game-instructions/ch-ins-13.jpg',
-          '/chaser-game-instructions/ch-ins-14.jpg',
-          '/chaser-game-instructions/ch-ins-15.jpg',
-          '/chaser-game-instructions/ch-ins-16.jpg'
+        return [
+          ...commonAssets,
+          // Chaser-specific high priority
+          { path: '/buttons/share-controls/share-enabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/share-controls/share-disabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/share-controls/share-only-once.png', type: 'image', priority: 'high' },
+          { path: '/buttons/leaderboard/chaser.png', type: 'image', priority: 'high' },
+          { path: '/buttons/leaderboard/phraser.png', type: 'image', priority: 'high' },
+          { path: '/buttons/leaderboard/sharer.png', type: 'image', priority: 'high' },
+          { path: '/game-elements/track.png', type: 'image', priority: 'high' },
+          { path: '/buttons/navigation/leaderboard.png', type: 'image', priority: 'high' },
+          { path: '/buttons/rps-buttons/rock.png', type: 'image', priority: 'high' },
+          { path: '/buttons/rps-buttons/paper.png', type: 'image', priority: 'high' },
+          { path: '/buttons/rps-buttons/scissors.png', type: 'image', priority: 'high' },
+          { path: '/buttons/game-controls/play-again.png', type: 'image', priority: 'high' },
+          
+          // Chaser-specific medium priority
+          { path: '/game-elements/life-gain.png', type: 'image', priority: 'medium' },
+          { path: '/game-elements/life-lost.png', type: 'image', priority: 'medium' },
+          { path: '/chaser-game-instructions/chaser.gif', type: 'gif', priority: 'medium' },
+          { path: '/chaser-game-instructions/instructions-chaser.png', type: 'image', priority: 'medium' },
+          { path: '/chaser-game-instructions/who-beats-who.png', type: 'image', priority: 'medium' },
+          
+          // Chaser-specific audio (low priority)
+          { path: '/sounds/chaser-swap-track.m4a', type: 'audio', priority: 'low' },
+          { path: '/sounds/game-button-click.m4a', type: 'audio', priority: 'low' },
+          { path: '/sounds/point.mp3', type: 'audio', priority: 'low' },
+          { path: '/sounds/no-point.mp3', type: 'audio', priority: 'low' }
         ];
       } else {
-        gameSpecificAssets = [
-          '/buttons/phraser-controls/letterbox.png',
-          '/buttons/phraser-controls/end-game.png',
-          '/buttons/phraser-controls/submit-enabled.png',
-          '/buttons/phraser-controls/submit-disabled.png',
-          '/buttons/phraser-controls/clear-enabled.png',
-          '/buttons/phraser-controls/clear-disabled.png',
-          '/buttons/game-controls/show-letters.png',
-          '/buttons/game-controls/start-game.png',
-          // Phraser-specific sounds
-          '/sounds/phraser-letter-type.m4a',
-          '/sounds/game-button-click.m4a',
-          '/sounds/point.mp3',
-          '/sounds/no-point.mp3',
-          // Phraser instruction images
-          '/phraser-game-instructions/phraser.gif',
-          '/phraser-game-instructions/instructions-phraser.png',
-          '/phraser-game-instructions/ph-ins-1.jpg',
-          '/phraser-game-instructions/ph-ins-2.jpg',
-          '/phraser-game-instructions/ph-ins-3.jpg',
-          '/phraser-game-instructions/ph-ins-4.jpg',
-          '/phraser-game-instructions/ph-ins-5.jpg',
-          '/phraser-game-instructions/ph-ins-6.jpg',
-          '/phraser-game-instructions/ph-ins-7.jpg',
-          '/phraser-game-instructions/ph-ins-8.jpg',
-          '/phraser-game-instructions/ph-ins-9.jpg',
-          '/phraser-game-instructions/ph-ins-10.jpg',
-          '/phraser-game-instructions/ph-ins-11.jpg',
-          '/phraser-game-instructions/ph-ins-12.jpg',
-          '/phraser-game-instructions/ph-ins-13.jpg',
-          '/phraser-game-instructions/ph-ins-14.jpg'
+        return [
+          ...commonAssets,
+          // Phraser-specific high priority
+          { path: '/buttons/phraser-controls/letterbox.png', type: 'image', priority: 'high' },
+          { path: '/buttons/phraser-controls/end-game.png', type: 'image', priority: 'high' },
+          { path: '/buttons/phraser-controls/submit-enabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/phraser-controls/submit-disabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/phraser-controls/clear-enabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/phraser-controls/clear-disabled.png', type: 'image', priority: 'high' },
+          { path: '/buttons/game-controls/show-letters.png', type: 'image', priority: 'high' },
+          { path: '/buttons/game-controls/start-game.png', type: 'image', priority: 'high' },
+          
+          // Phraser-specific medium priority
+          { path: '/phraser-game-instructions/phraser.gif', type: 'gif', priority: 'medium' },
+          { path: '/phraser-game-instructions/instructions-phraser.png', type: 'image', priority: 'medium' },
+          
+          // Phraser-specific audio (low priority)
+          { path: '/sounds/phraser-letter-type.m4a', type: 'audio', priority: 'low' },
+          { path: '/sounds/game-button-click.m4a', type: 'audio', priority: 'low' },
+          { path: '/sounds/point.mp3', type: 'audio', priority: 'low' },
+          { path: '/sounds/no-point.mp3', type: 'audio', priority: 'low' }
         ];
       }
+    };
 
-      // Combine all assets
-      const allAssets = [...commonAssets, ...gameSpecificAssets];
-      const totalAssets = allAssets.length;
+    const loadAssetsByPriority = async (assets: AssetInfo[]) => {
+      const cache = assetCache();
+      const priorityOrder: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
       
-      // Load assets in parallel batches for much faster loading
-      const batchSize = 5; // Load 5 assets at a time
-      let loadedCount = 0;
+      let totalLoaded = 0;
+      const totalAssets = assets.length;
       
-      for (let i = 0; i < allAssets.length; i += batchSize) {
-        const batch = allAssets.slice(i, i + batchSize);
-                
-        // Load batch in parallel
-        await Promise.all(batch.map(async (asset) => {
-          if (!asset) return;
-          
-          const assetName = asset.split('/').pop()?.replace('.png', '').replace('.gif', '').replace('.m4a', '').replace('.mp3', '') || 'asset';
-          
-          // Check if it's an audio file
-          if (asset.endsWith('.m4a') || asset.endsWith('.mp3')) {
-            const audio = new Audio();
-            await new Promise<void>((resolve) => {
-              audio.oncanplaythrough = () => resolve();
-              audio.onerror = () => resolve(); // Continue even if asset fails to load
-              audio.src = asset;
-            });
-          } else {
-            // It's an image file
-            const img = new Image();
-            await new Promise<void>((resolve) => {
-              img.onload = () => resolve();
-              img.onerror = () => resolve(); // Continue even if asset fails to load
-              img.src = asset;
-            });
-          }
-          
-          loadedCount++;
-          setCurrentAsset(`Loading ${assetName}...`);
-          setProgress((loadedCount / totalAssets) * 100);
-        }));
+      // iOS-specific optimizations
+      const isIOSDevice = isIOS();
+      const iosTimeout = 5000; // Shorter timeout for iOS
+      const normalTimeout = 8000;
+      
+      for (const priority of priorityOrder) {
+        const priorityAssets = assets.filter(asset => asset.priority === priority);
+        if (priorityAssets.length === 0) continue;
         
-        // Small delay between batches to prevent overwhelming the browser
-        if (i + batchSize < allAssets.length) {
-          await new Promise(resolve => setTimeout(resolve, 50));
+        setCurrentAsset(`Loading ${priority} priority assets...`);
+        
+        // Load assets in parallel batches for this priority level
+        // Smaller batches on iOS to prevent memory issues
+        const batchSize = isIOSDevice 
+          ? (priority === 'critical' ? 2 : priority === 'high' ? 3 : 4)
+          : (priority === 'critical' ? 3 : priority === 'high' ? 5 : 8);
+        
+        for (let i = 0; i < priorityAssets.length; i += batchSize) {
+          const batch = priorityAssets.slice(i, i + batchSize);
+          
+          // Load batch in parallel with timeout
+          const loadPromises = batch.map(async (asset) => {
+            if (cache.isLoaded(asset.path)) {
+              totalLoaded++;
+              return true;
+            }
+            
+            const timeout = isIOSDevice ? iosTimeout : normalTimeout;
+            const success = await loadAsset(asset, timeout);
+            if (success) {
+              cache.markLoaded(asset.path);
+            }
+            totalLoaded++;
+            
+            const assetName = asset.path.split('/').pop()?.replace(/\.(png|gif|m4a|mp3)$/, '') || 'asset';
+            setCurrentAsset(`Loading ${assetName}...`);
+            setProgress((totalLoaded / totalAssets) * 100);
+            
+            return success;
+          });
+          
+          await Promise.all(loadPromises);
+          
+          // Longer delay on iOS to prevent memory pressure
+          if (i + batchSize < priorityAssets.length) {
+            const delay = isIOSDevice ? 100 : 30;
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
         }
       }
-      
-      setCurrentAsset('Ready to play!');
-      setProgress(100);
-      await new Promise(resolve => setTimeout(resolve, 500));
-      onLoadingComplete();
     };
 
     loadAllAssets();
     
-    // Cleanup function
     return () => {
       setIsLoading(false);
     };
-  }, [gameType, onLoadingComplete]);
+  }, [gameType, onLoadingComplete, postId, userId, loadAsset, assetCache]);
 
   return (
     <div className={`loading-screen fixed inset-0 flex flex-col items-center justify-center transition-colors duration-300 ${
       isDarkMode ? 'bg-black text-white' : 'bg-white text-black'
     }`}>
-      {/* Game Logo */}
-      <div className="mb-8">
+      {/* Game Logo - Centered */}
+      <div className="mb-8 flex justify-center items-center w-full">
         <img 
           src="/ui/game-logo.gif" 
           alt="Chase n' Phrase Game Logo" 
-          className="game-logo"
+          className="game-logo max-w-full h-auto"
+          style={{ 
+            maxWidth: '280px',
+            width: '100%',
+            height: 'auto'
+          }}
         />
       </div>
 
@@ -298,6 +365,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ gameType, onLoadin
         <p className="text-sm text-gray-300" style={{ color: '#d1d5db' }}>
           {Math.round(progress)}% complete
         </p>
+        {loadingError && (
+          <p className="text-sm text-yellow-400 mt-2" style={{ color: '#fbbf24' }}>
+            ⚠️ {loadingError}
+          </p>
+        )}
       </div>
 
       {/* Game Type Indicator */}

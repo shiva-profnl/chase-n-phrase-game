@@ -83,18 +83,25 @@ export class LeaderboardService {
     userRank?: number;
   }> {
     try {
+      
       let entries: LeaderboardEntry[] = [];
 
       switch (type) {
         case 'chaser':
           // Get top 10 scores in descending order (highest first)
           const chaserScores = await redis.zRange(this.keys.chaserScores, 0, 9, { REV: true });
-          entries = await this.processLeaderboardEntries(chaserScores, 'chaser');
+          
+          // Also check without REV to see the difference
+          const chaserScoresAsc = await redis.zRange(this.keys.chaserScores, 0, 9, { REV: false });
           break;
           
         case 'phraser':
           // Get top 10 scores in descending order (highest first)
           const phraserScores = await redis.zRange(this.keys.phraserScores, 0, 9, { REV: true });
+          
+          // Also check without REV to see the difference
+          const phraserScoresAsc = await redis.zRange(this.keys.phraserScores, 0, 9, { REV: false });
+          
           entries = await this.processLeaderboardEntries(phraserScores, 'phraser');
           break;
           
@@ -123,7 +130,7 @@ export class LeaderboardService {
       // Redis zRange returns an array of [member, score] pairs
       const userId = Array.isArray(scoreData) ? scoreData[0] : scoreData.member;
       const score = Array.isArray(scoreData) ? scoreData[1] : scoreData.score;
-      
+            
       const userKey = this.keys.userStats(userId);
       const userData = await redis.get(userKey);
       
@@ -133,7 +140,7 @@ export class LeaderboardService {
           userId,
           username: userStats.username,
           score: parseFloat(score),
-          rank: i + 1 // Rank based on position in sorted list
+          rank: i + 1 // Rank based on position in sorted list (highest score = rank 1)
         };
         
         entries.push(entry);

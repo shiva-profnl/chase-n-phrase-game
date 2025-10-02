@@ -8,7 +8,7 @@
     "postinstall": "npm run build",
     "build:client": "cd src/client && vite build",
     "build:server": "cd src/server && vite build",
-    "build": "npm run build:client && npm run build:server",
+    "build": "npm run optimize:assets && npm run build:client && npm run build:server",
     "check": "npm run type-check && npm run lint:fix && npm run prettier",
     "deploy": "npm run build && devvit upload",
     "dev": "concurrently -k -p \"[{name}]\" -n \"CLIENT,SERVER,DEVVIT\" -c \"blue,green,magenta\" \"npm run dev:client\" \"npm run dev:server\" \"npm run dev:devvit\"",
@@ -20,6 +20,7 @@
     "lint:fix": "eslint --fix ./src",
     "login": "devvit login",
     "launch": "npm run build && npm run deploy && devvit publish",
+    "optimize:assets": "ts-node tools/optimizeAssets.ts",
     "prettier": "prettier-package-json --write ./package.json && prettier --write .",
     "type-check": "tsc --build"
   },

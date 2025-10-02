@@ -711,21 +711,12 @@ router.post('/internal/forms/list-custom-dictionary', async (req, res): Promise<
 
 router.post('/internal/forms/clear-leaderboard', async (req, res): Promise<void> => {
   try {
-    console.log('=== CLEAR LEADERBOARD FORM SUBMITTED ===');
-    console.log('Request body:', JSON.stringify(req.body, null, 2));
-    console.log('Request headers:', req.headers);
-    
     const { type } = req.body;
-    console.log('Extracted type:', type);
     
     // Handle case where type might be an array
     const actualType = Array.isArray(type) ? type[0] : type;
-    console.log('Actual type after array handling:', actualType);
-    console.log('Type validation:', ['chaser', 'phraser', 'sharer', 'all'].includes(actualType));
     
     if (!actualType || !['chaser', 'phraser', 'sharer', 'all'].includes(actualType)) {
-      console.log('Invalid type received:', type);
-      console.log('Available body keys:', Object.keys(req.body || {}));
       res.json({
         showToast: {
           text: `Invalid leaderboard type selected. Received: ${type || 'undefined'}`,
@@ -811,7 +802,6 @@ router.post('/internal/forms/clear-leaderboard', async (req, res): Promise<void>
 // Clear leaderboard menu action
 router.post('/internal/menu/clear-leaderboard', async (_req, res): Promise<void> => {
   try {
-    console.log('Clear leaderboard menu action called');
     res.json({
       showForm: {
         name: 'clearLeaderboardForm',

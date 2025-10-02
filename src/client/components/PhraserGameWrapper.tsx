@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { PhraserGame } from './PhraserGame';
 import { usePostManager } from '../hooks/usePostManager';
 import { audioManager } from '../utils/audioManager';
@@ -26,6 +26,12 @@ export const PhraserGameWrapper: React.FC<PhraserGameWrapperProps> = ({
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Detect iOS for special handling
+  const isIOS = useCallback(() => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+           (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }, []);
 
   const { 
     getPostData, 
@@ -344,7 +350,10 @@ const AlreadyPlayedScreen: React.FC<{
             </div>
           ) : leaderboard.length > 0 ? (
             <div className="space-y-2">
-              {leaderboard.slice(0, 10).map((record, index) => (
+              {leaderboard
+                .sort((a, b) => b.phraserScore - a.phraserScore)
+                .slice(0, 10)
+                .map((record, index) => (
                 <div 
                   key={record.userId} 
                   className={`flex justify-between items-center p-3 rounded ${

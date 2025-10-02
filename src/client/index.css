@@ -879,3 +879,75 @@ input, textarea {
   font-weight: 400 !important;
   letter-spacing: 0.3px !important;
 }
+
+/* iPhone-specific fixes for loading screen and games */
+@supports (-webkit-touch-callout: none) {
+  .loading-screen {
+    /* Fix for iOS Safari viewport issues */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .game-logo {
+    /* Ensure logo is centered on iPhone */
+    display: block !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    max-width: 280px !important;
+  }
+  
+  /* Fix loading screen layout on iPhone */
+  .loading-screen .flex {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+  
+  /* iPhone-specific Phraser game optimizations */
+  .btn-letterbox {
+    /* Larger touch targets for iPhone */
+    min-width: 3.5rem !important;
+    min-height: 3.5rem !important;
+    /* Better touch feedback */
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+    /* Prevent text selection on touch */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* iPhone-specific grid adjustments */
+  @media (max-width: 768px) {
+    .btn-letterbox {
+      width: 3.5rem !important;
+      height: 3.5rem !important;
+      min-width: 3.5rem !important;
+      min-height: 3.5rem !important;
+      max-width: 3.5rem !important;
+      max-height: 3.5rem !important;
+    }
+    .text-responsive {
+      font-size: 2rem !important;
+    }
+  }
+  
+  /* iPhone-specific game layout fixes */
+  .main-bg {
+    /* Fix for iOS Safari viewport issues */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Better touch handling for game buttons */
+  button {
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.3);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+}

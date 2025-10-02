@@ -10,6 +10,42 @@ export async function getLeaderboardHandler(request: any): Promise<Response> {
     const type = request.query.type;
     const currentUserId = request.query.currentUserId;
     
+    // Log Redis database contents when leaderboard is accessed
+    
+    try {
+      // Get all Redis keys
+      const allKeys = await redis.keys('*');
+      
+      // Log all keys grouped by type
+      const keyGroups: { [key: string]: string[] } = {};
+      allKeys.forEach(key => {
+        const prefix = key.split(':')[0] || 'other';
+        if (!keyGroups[prefix]) keyGroups[prefix] = [];
+        keyGroups[prefix].push(key);
+      });
+      
+      // Get sorted set data (leaderboards) with detailed info
+      const sortedSets = ['chaser_scores', 'phraser_scores', 'sharer_scores'];
+      for (const setKey of sortedSets) {
+        try {
+          // Get all scores in descending order
+          await redis.zRange(setKey, 0, -1, { REV: true, WITHSCORES: true });
+          
+          // Get top 10 scores
+          await redis.zRange(setKey, 0, 9, { REV: true, WITHSCORES: true });
+          
+          // Get bottom 10 scores
+          await redis.zRange(setKey, -10, -1, { REV: true, WITHSCORES: true });
+          
+        } catch (err) {
+          console.error(`${setKey}: [Error reading sorted set]`);
+        }
+      }
+      
+    } catch (redisError) {
+      console.error('Error reading Redis database:', redisError);
+    }
+    
     // If type is provided, get real leaderboard data
     if (type) {
       const leaderboardService = new LeaderboardService();

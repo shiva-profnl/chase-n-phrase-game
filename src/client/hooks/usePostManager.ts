@@ -120,14 +120,18 @@ export function usePostManager() {
 
   const getLeaderboard = useCallback(async (postId: string): Promise<PlayRecord[]> => {
     try {
+      
       const response = await fetch(`/api/leaderboard?postId=${encodeURIComponent(postId)}`);
 
       if (!response.ok) {
         throw new Error('Failed to get leaderboard');
       }
 
-      return await response.json();
+      const data = await response.json();
+      
+      return data;
     } catch (error) {
+      console.error('=== CLIENT: Error getting leaderboard:', error);
       throw error;
     }
   }, []);

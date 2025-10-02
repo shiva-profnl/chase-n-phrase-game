@@ -109,18 +109,24 @@ export class PostManager {
 
   // Get leaderboard for a post
   static async getPostLeaderboard(postId: string): Promise<PlayRecord[]> {
+    
     const players = await this.getPostPlayers(postId);
+    
     const records: PlayRecord[] = [];
     
     for (const userId of players) {
       const record = await this.getUserPlayRecord(postId, userId);
       if (record) {
         records.push(record);
+      } else {
+        console.error(`No record found for user ${userId}`);
       }
     }
     
     // Sort by score descending
-    return records.sort((a, b) => b.phraserScore - a.phraserScore);
+    const sortedRecords = records.sort((a, b) => b.phraserScore - a.phraserScore);
+    
+    return sortedRecords;
   }
 
   // Create a new Devvit game post
